@@ -1,0 +1,54 @@
+image: gradle:jdk8
+
+before_script:
+  - wget -q https://courses.cs.washington.edu/courses/cse373/18au/files/hw_scripts/hw5-build-gradle -O build.gradle
+
+stages:
+  - compile
+  - testDLL
+  - testHash
+  - part1
+
+Compile:
+  stage: compile
+  script:
+    - wget -q https://courses.cs.washington.edu/courses/cse373/18au/files/hw_scripts/compile.sh
+    - sh compile.sh
+  tags:
+    - compile
+
+
+DoubleLinkedlist:
+  stage: testDLL
+  script:
+    - wget -q https://courses.cs.washington.edu/courses/cse373/18au/files/hw_scripts/hw5-dll.sh
+    - sh hw5-dll.sh
+  tags:
+    - testdll
+
+
+HashDictionary:
+  stage: testHash
+  script:
+    - wget -q https://courses.cs.washington.edu/courses/cse373/18au/files/hw_scripts/hw5-hash.sh
+    - sh hw5-hash.sh
+  tags:
+    - testhash
+
+
+StyleCheck:
+  stage: part1
+  script:
+    - wget -q https://courses.cs.washington.edu/courses/cse373/18au/files/hw_scripts/stylecheck.sh
+    - sh stylecheck.sh
+  tags:
+    - stylecheck
+
+
+Part1:
+  stage: part1
+  script:
+    - wget -q https://courses.cs.washington.edu/courses/cse373/18au/files/hw_scripts/hw5-part1.sh
+    - sh hw5-part1.sh
+  tags:
+    - part1
