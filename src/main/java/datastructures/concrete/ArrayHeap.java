@@ -1,7 +1,7 @@
 package datastructures.concrete;
 
 import datastructures.interfaces.IPriorityQueue;
-import misc.exceptions.NotYetImplementedException;
+import misc.exceptions.EmptyContainerException;
 
 /**
  * See IPriorityQueue for details on what each method must do.
@@ -16,9 +16,11 @@ public class ArrayHeap<T extends Comparable<T>> implements IPriorityQueue<T> {
     private T[] heap;
 
     // Feel free to add more fields and constants.
+    private int size;
 
     public ArrayHeap() {
-        throw new NotYetImplementedException();
+        heap = makeArrayOfT(10);
+        size = 0;
     }
 
     /**
@@ -36,24 +38,83 @@ public class ArrayHeap<T extends Comparable<T>> implements IPriorityQueue<T> {
         // works, and should not modify it in any way.
         return (T[]) (new Comparable[size]);
     }
+    
+    private void expand() {
+        T[] newArr = makeArrayOfT(heap.length * 2);
+        for (int i = 0; i < heap.length; i++) {
+            newArr[i] = heap[i];
+        }
+        heap = newArr;
+    }
+    
+    private void moveDown(int index) {
+        int min = comprChildren(index);
+        if (min != index) {
+            T temp = heap[index];
+            heap[index] = heap[min];
+            heap[min] = temp;
+            moveDown(min);
+        }
+    }
+    
+    private int comprChildren(int index) {
+        int min = index;
+        for(int i = 1; i <= NUM_CHILDREN; i++) {
+            if (index*NUM_CHILDREN+i < heap.length && heap[index*NUM_CHILDREN+i] != null &&
+                heap[min] != null && heap[index*NUM_CHILDREN+i].compareTo(heap[min]) == -1) {
+                min = index*NUM_CHILDREN+i;
+            }
+        }
+        return min;
+    }
+    
+    private void moveUp(int index) {
+        if ((index-1)/NUM_CHILDREN >= 0 && heap[(index-1)/NUM_CHILDREN] != null &&
+            heap[index] != null && heap[index].compareTo(heap[(index-1)/NUM_CHILDREN]) == -1) {
+            T temp = heap[index];
+            heap[index] = heap[(index-1)/NUM_CHILDREN];
+            heap[(index-1)/NUM_CHILDREN] = temp;
+            moveUp((index-1)/NUM_CHILDREN);
+        }
+    }
 
     @Override
     public T removeMin() {
-        throw new NotYetImplementedException();
+        if (size == 0) {
+            throw new EmptyContainerException();
+        }
+        T temp = heap[0];
+        heap[0] = heap[size-1];
+        heap[size-1] = null;
+        size--;
+        if (size > 0) {
+            moveDown(0);
+        }
+        return temp;
     }
 
     @Override
     public T peekMin() {
-        throw new NotYetImplementedException();
+        if (size == 0) {
+            throw new EmptyContainerException();
+        }
+        return heap[0];
     }
 
     @Override
     public void insert(T item) {
-        throw new NotYetImplementedException();
+        if (item == null ) {
+            throw new IllegalArgumentException();
+        } else if (size == heap.length) {
+            expand();
+        }
+        heap[size] = item;
+        moveUp(size);
+        size++;
     }
 
     @Override
     public int size() {
-        throw new NotYetImplementedException();
+        return size;
     }
 }
