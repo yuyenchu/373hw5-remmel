@@ -179,7 +179,7 @@ public class TestProvidedChainedHashDictionary extends TestDictionary {
             assertFalse(dict.containsKey(-i - 1));
             assertEquals(limit - i, dict.size());
 
-            for(KVPair<Integer, Integer> pair : dict) {
+            for (KVPair<Integer, Integer> pair : dict) {
                 assertEquals(pair.getValue(), pair.getKey() + 1);
             }
 

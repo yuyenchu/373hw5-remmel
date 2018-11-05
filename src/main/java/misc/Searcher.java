@@ -3,6 +3,7 @@ package misc;
 import datastructures.concrete.ArrayHeap;
 import datastructures.concrete.DoubleLinkedList;
 import datastructures.interfaces.IList;
+import datastructures.interfaces.IPriorityQueue;
 
 public class Searcher {
     /**
@@ -34,7 +35,7 @@ public class Searcher {
         if (k < 0) {
             throw new IllegalArgumentException();
         }
-        ArrayHeap<T> heap = new ArrayHeap<T>();
+        IPriorityQueue<T> heap = new ArrayHeap<T>();
         for (int i = 1; i <= k; i++) {
             heap.insert(input.get(input.size()-i));
         }

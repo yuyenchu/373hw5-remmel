@@ -30,13 +30,13 @@ public class ArrayHeap<T extends Comparable<T>> implements IPriorityQueue<T> {
      * Note that each element in the array will initially be null.
      */
     @SuppressWarnings("unchecked")
-    private T[] makeArrayOfT(int size) {
+    private T[] makeArrayOfT(int arrSize) {
         // This helper method is basically the same one we gave you
         // in ArrayDictionary and ChainedHashDictionary.
         //
         // As before, you do not need to understand how this method
         // works, and should not modify it in any way.
-        return (T[]) (new Comparable[size]);
+        return (T[]) (new Comparable[arrSize]);
     }
     
     private void expand() {
@@ -59,7 +59,7 @@ public class ArrayHeap<T extends Comparable<T>> implements IPriorityQueue<T> {
     
     private int comprChildren(int index) {
         int min = index;
-        for(int i = 1; i <= NUM_CHILDREN; i++) {
+        for (int i = 1; i <= NUM_CHILDREN; i++) {
             if (index*NUM_CHILDREN+i < heap.length && heap[index*NUM_CHILDREN+i] != null &&
                 heap[min] != null && heap[index*NUM_CHILDREN+i].compareTo(heap[min]) == -1) {
                 min = index*NUM_CHILDREN+i;
@@ -103,7 +103,7 @@ public class ArrayHeap<T extends Comparable<T>> implements IPriorityQueue<T> {
 
     @Override
     public void insert(T item) {
-        if (item == null ) {
+        if (item == null) {
             throw new IllegalArgumentException();
         } else if (size == heap.length) {
             expand();
