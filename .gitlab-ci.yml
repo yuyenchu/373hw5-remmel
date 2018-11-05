@@ -8,6 +8,7 @@ stages:
   - testDLL
   - testHash
   - part1
+  - testEfficiency
 
 Compile:
   stage: compile
@@ -52,3 +53,13 @@ Part1:
     - sh hw5-part1.sh
   tags:
     - part1
+
+
+TestEfficiency:
+  stage: testEfficiency
+  script:
+    - wget -q https://courses.cs.washington.edu/courses/cse373/18au/files/hw_scripts/hw5-efficient.sh
+    - sh hw5-efficient.sh
+  tags:
+    - testEfficiency
+  allow_failure: true
