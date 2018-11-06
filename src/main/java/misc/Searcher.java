@@ -36,8 +36,12 @@ public class Searcher {
             throw new IllegalArgumentException();
         }
         IPriorityQueue<T> heap = new ArrayHeap<T>();
-        for (int i = 1; i <= k; i++) {
-            heap.insert(input.get(input.size()-i));
+        int i = 0;
+        for (T temp: input) {
+            if (i >= input.size() - k) {
+                heap.insert(temp);
+            }
+            i++;
         }
         IList<T> output = new DoubleLinkedList<T>();
         while (!heap.isEmpty()) {
