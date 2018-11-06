@@ -148,23 +148,23 @@ public class TestArrayHeapFunctionality extends BaseTest {
         for (int i = 0; i < 10; i++) {
             heap.insert(i);            
         }
-        assertTrue(heap.size() == 10);
+        assertEquals(10, heap.size());
         for (int i = 10; i < 20; i++) {
             heap.insert(i);            
         }
-        assertTrue(heap.size() == 20);
+        assertEquals(20, heap.size());
         for (int i = 20; i < 40; i++) {
             heap.insert(i);            
         }
-        assertTrue(heap.size() == 40);
+        assertEquals(40, heap.size());
         for (int i = 40; i < 100; i++) {
             heap.insert(i);            
         }
-        assertTrue(heap.size() == 100);
+        assertEquals(100, heap.size());
         for (int i = 100; i < 200; i++) {
             heap.insert(i);            
         }
-        assertTrue(heap.size() == 200);
+        assertEquals(200, heap.size());
     }
     
     @Test(timeout=SECOND)
@@ -188,5 +188,35 @@ public class TestArrayHeapFunctionality extends BaseTest {
             assertEquals(i, heap.removeMin());
             assertEquals(0, heap.size());
         }
+    }
+    
+    @Test(timeout=SECOND)
+    public void testCharacter() {
+        IPriorityQueue<Character> heap = this.makeInstance();
+        String str = "abcdefg";
+        for (int i = str.length() - 1; i >= 0; i--) {
+            heap.insert(str.charAt(i));
+        }
+        char prev = heap.removeMin();
+        assertEquals('a', prev);
+        for (int i = 1; i < str.length(); i++) {
+            assertTrue(heap.peekMin().compareTo(prev) > 0);
+            prev = heap.removeMin();
+        } 
+    }
+    
+    @Test(timeout=SECOND)
+    public void testString() {
+        IPriorityQueue<String> heap = this.makeInstance();
+        String[] str = {"a", "b", "c", "apple", "append", "boy", "box", "cat"};
+        for (int i = str.length - 1; i >= 0; i--) {
+            heap.insert(str[i]);
+        }
+        String prev = heap.removeMin();
+        assertEquals("a", prev);
+        for (int i = 1; i < str.length; i++) {
+            assertTrue(heap.peekMin().compareTo(prev) > 0);
+            prev = heap.removeMin();
+        } 
     }
 }
