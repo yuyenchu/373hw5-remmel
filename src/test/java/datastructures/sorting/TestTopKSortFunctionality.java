@@ -9,6 +9,9 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
 
 import org.junit.Test;
 
@@ -16,14 +19,6 @@ import org.junit.Test;
  * See spec for details on what kinds of tests this class should include.
  */
 public class TestTopKSortFunctionality extends BaseTest {
-    private void checkInOrder(IList<Integer> top) {
-        int min = Integer.MIN_VALUE;
-        for (int i = 0; i < top.size(); i++) {
-            assertTrue(top.get(i) > min);
-            min = top.get(i);
-        }
-    }
-    
     private IList<Integer> makeList(int[] input){
         IList<Integer> list = new DoubleLinkedList<Integer>();
         for (int i = 0; i < input.length; i++) {
@@ -57,43 +52,58 @@ public class TestTopKSortFunctionality extends BaseTest {
     @Test(timeout=SECOND)
     public void testCase1() {
         IList<Integer> list = new DoubleLinkedList<>();
+        List<Integer> refer = new LinkedList<>();
         for (int i = 0; i < 20; i++) {
             list.add(i%2==0?i/2:i);
+            refer.add(i%2==0?i/2:i);
         }
         IList<Integer> top = Searcher.topKSort(7, list);
         assertEquals(7, top.size());
-        checkInOrder(top);
+        Collections.sort(refer);
+        for (int i = 7; i > 0; i--) {
+            assertEquals(refer.get(refer.size() - i), top.get(top.size() - i));
+        }
     }
     
     @Test(timeout=SECOND)
     public void testCase2() {
-        IList<Integer> list = makeList(new int[]{1, 3, 5, 6, 4, 2, 0, -1, -3, -4, -2});
+        int[] nums = new int[]{1, 3, 5, 6, 4, 2, 0, -1, -3, -4, -2};
+        IList<Integer> list = makeList(nums);
+        List<Integer> refer = new LinkedList<>();
+        for (int num: nums) {
+            refer.add(num);
+        }
+        Collections.sort(refer);
         IList<Integer> top = Searcher.topKSort(9, list);
         assertEquals(9, top.size());
-        checkInOrder(top);
+        for (int i = 9; i > 0; i--) {
+            assertEquals(refer.get(refer.size() - i), top.get(top.size() - i));
+        }
     }
     
     @Test(timeout=SECOND)
     public void testCase3() {
-        IList<Character> list = makeList("XYZabcdefgxyzABCEDFG".toCharArray());
+        String chars = "XYZabcdefgxyzABCEDFG";
+        IList<Character> list = makeList(chars.toCharArray());
         IList<Character> top = Searcher.topKSort(10, list);
         assertEquals(10, top.size());
-        char[] arr = "xyzABCEDFG".toCharArray();
+        char[] arr = chars.toCharArray();
         Arrays.sort(arr);
-        for (int i = 0; i < 10; i++) {
-            assertEquals(arr[i], top.get(i));
+        for (int i = 10; i > 0; i--) {
+            assertEquals(arr[arr.length - i], top.get(top.size() - i));
         }
     }
     
     @Test(timeout=SECOND)
     public void testCase4() {
-        IList<Character> list = makeList("<>,./?;':\"{}[]\\_+-=~!@#$%^&*()".toCharArray());
+        String chars = "<>,./?;':\"{}[]\\_+-=~!@#$%^&*()";
+        IList<Character> list = makeList(chars.toCharArray());
         IList<Character> top = Searcher.topKSort(15, list);
         assertEquals(15, top.size());
-        char[] arr = "_+-=~!@#$%^&*()".toCharArray();
+        char[] arr = chars.toCharArray();
         Arrays.sort(arr);
-        for (int i = 0; i < 15; i++) {
-            assertEquals(arr[i], top.get(i));
+        for (int i = 15; i > 0; i--) {
+            assertEquals(arr[arr.length - i], top.get(top.size() - i));
         }
     }
     

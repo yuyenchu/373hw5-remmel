@@ -35,11 +35,19 @@ public class Searcher {
         if (k < 0) {
             throw new IllegalArgumentException();
         }
+        else if (k == 0) {
+            return new DoubleLinkedList<>();
+        }
         IPriorityQueue<T> heap = new ArrayHeap<T>();
         int i = 0;
         for (T temp: input) {
-            if (i >= input.size() - k) {
+            if (i < k) {
                 heap.insert(temp);
+            } else {
+                if (temp.compareTo(heap.peekMin()) > 0) {
+                    heap.removeMin();
+                    heap.insert(temp);
+                }
             }
             i++;
         }
