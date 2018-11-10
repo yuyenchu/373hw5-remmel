@@ -95,4 +95,170 @@ public class TestTopKSortFunctionality extends BaseTest {
             assertEquals(arr[i], top.get(i));
         }
     }
+    
+    /**
+     * This test will check if a list contains exactly the same elements as
+     * the "expected" array. See the tests you were provided for example
+     * usage.
+     *
+     * Please do not modify this method: our private tests rely on this.
+     */
+    protected <T> void assertListMatches(T[] expected, IList<T> actual) {
+        assertEquals(expected.length, actual.size());
+        assertEquals(expected.length == 0, actual.isEmpty());
+        for (int i = 0; i < expected.length; i++) {
+            try {
+                assertEquals("Item at index " + i + " does not match", expected[i], actual.get(i));
+            } catch (Exception ex) {
+                String errorMessage = String.format(
+                        "Got %s when getting item at index %d (expected '%s')",
+                        ex.getClass().getSimpleName(),
+                        i,
+                        expected[i]);
+                throw new AssertionError(errorMessage, ex);
+            }
+        }
+    }
+
+    @Test(timeout=SECOND)
+    public void testSortHappy() {
+        IList<Integer> list = new DoubleLinkedList<>();
+        for (int i = 100; i > 0; i--) {
+            list.add((int) (Math.random() * 500000));
+        }
+        IList<Integer> top = Searcher.topKSort(80, list);
+        assertEquals(80, top.size());
+        assertEquals(100, list.size());
+        int prev = -1;
+        for (int val : top) {
+            assertTrue(val > prev);
+            prev = val;
+        }
+    }
+        
+    @Test(timeout=SECOND)
+    public void testInputIsEmpty() {
+        IList<Integer> list = new DoubleLinkedList<>();
+        IList<Integer> top = Searcher.topKSort(0, list);
+        this.assertListMatches(new Integer[] {}, top);
+        top = Searcher.topKSort(3, list);
+        this.assertListMatches(new Integer[] {}, top);
+    }
+    
+    @Test(timeout=SECOND)
+    public void testInputIsOneTwoElement() {
+        IList<Integer> list = new DoubleLinkedList<>();
+        list.add(1);
+        IList<Integer> top = Searcher.topKSort(0, list);
+        this.assertListMatches(new Integer[] {}, top);
+        top = Searcher.topKSort(1, list);
+        this.assertListMatches(new Integer[] {1}, top);
+        top = Searcher.topKSort(3, list);
+        this.assertListMatches(new Integer[] {1}, top);
+        list.add(2);
+        top = Searcher.topKSort(0, list);
+        this.assertListMatches(new Integer[] {}, top);
+        top = Searcher.topKSort(1, list);
+        this.assertListMatches(new Integer[] {2}, top);
+        top = Searcher.topKSort(3, list);
+        this.assertListMatches(new Integer[] {1, 2}, top);
+    }
+    
+    @Test(timeout=SECOND)
+    public void testInputIsSameElement() {
+        IList<Integer> list = new DoubleLinkedList<>();
+        list.add(1);
+        list.add(1);
+        list.add(1);
+        list.add(1);
+        list.add(1);
+        IList<Integer> top = Searcher.topKSort(0, list);
+        this.assertListMatches(new Integer[] {}, top);
+        top = Searcher.topKSort(3, list);
+        this.assertListMatches(new Integer[] {1, 1, 1, 1, 1}, list);
+        this.assertListMatches(new Integer[] {1, 1, 1}, top);
+        top = Searcher.topKSort(5, list);
+        this.assertListMatches(new Integer[] {1, 1, 1, 1, 1}, top);
+        top = Searcher.topKSort(7, list);
+        this.assertListMatches(new Integer[] {1, 1, 1, 1, 1}, top);
+        this.assertListMatches(new Integer[] {1, 1, 1, 1, 1}, list);
+    }
+    
+    @Test(timeout=SECOND)
+    public void testInputIsSorted() {
+        IList<Integer> list = new DoubleLinkedList<>();
+        list.add(1);
+        list.add(3);
+        list.add(5);
+        list.add(7);
+        list.add(9);
+        IList<Integer> top = Searcher.topKSort(0, list);
+        this.assertListMatches(new Integer[] {}, top);
+        top = Searcher.topKSort(3, list);
+        this.assertListMatches(new Integer[] {5, 7, 9}, top);
+        top = Searcher.topKSort(5, list);
+        this.assertListMatches(new Integer[] {1, 3, 5, 7, 9}, list);
+        this.assertListMatches(new Integer[] {1, 3, 5, 7, 9}, top);
+        top = Searcher.topKSort(7, list);
+        this.assertListMatches(new Integer[] {1, 3, 5, 7, 9}, top);
+        this.assertListMatches(new Integer[] {1, 3, 5, 7, 9}, list);
+    }
+    
+    @Test(timeout=SECOND)
+    public void testInputIsNotSorted() {
+        IList<Integer> list = new DoubleLinkedList<>();
+        list.add(9);
+        list.add(7);
+        list.add(5);
+        list.add(3);
+        list.add(1);
+        IList<Integer> top = Searcher.topKSort(0, list);
+        this.assertListMatches(new Integer[] {}, top);
+        top = Searcher.topKSort(3, list);
+        this.assertListMatches(new Integer[] {5, 7, 9}, top);
+        top = Searcher.topKSort(5, list);
+        this.assertListMatches(new Integer[] {9, 7, 5, 3, 1}, list);
+        this.assertListMatches(new Integer[] {1, 3, 5, 7, 9}, top);
+        top = Searcher.topKSort(7, list);
+        this.assertListMatches(new Integer[] {1, 3, 5, 7, 9}, top);
+        this.assertListMatches(new Integer[] {9, 7, 5, 3, 1}, list);
+    }
+    
+    @Test(timeout=SECOND)
+    public void testThrowException() {
+        IList<Integer> list = new DoubleLinkedList<>();
+        try {
+            IList<Integer> top = Searcher.topKSort(-1, list);
+            fail("Expected IllegalArgumentException");
+        } catch (IllegalArgumentException ex) {
+            // Do nothing: this is ok
+        }
+        list.add(1);
+        try {
+            IList<Integer> bottom = Searcher.topKSort(-1, list);
+            fail("Expected IllegalArgumentException");
+        } catch (IllegalArgumentException ex) {
+            // Do nothing: this is ok
+        }
+    }
+    
+    @Test(timeout=SECOND)
+    public void testInputIsNegative() {
+        IList<Integer> list = new DoubleLinkedList<>();
+        list.add(-1);
+        list.add(-3);
+        list.add(-5);
+        list.add(-7);
+        list.add(-9);
+        IList<Integer> top = Searcher.topKSort(0, list);
+        this.assertListMatches(new Integer[] {}, top);
+        top = Searcher.topKSort(3, list);
+        this.assertListMatches(new Integer[] {-5, -3, -1}, top);
+        top = Searcher.topKSort(5, list);
+        this.assertListMatches(new Integer[] {-1, -3, -5, -7, -9}, list);
+        this.assertListMatches(new Integer[] {-9, -7, -5, -3, -1}, top);
+        top = Searcher.topKSort(7, list);
+        this.assertListMatches(new Integer[] {-9, -7, -5, -3, -1}, top);
+        this.assertListMatches(new Integer[] {-1, -3, -5, -7, -9}, list);
+    }
 }
