@@ -7,9 +7,12 @@ import java.util.Arrays;
 //import java.util.Collection;
 //import java.util.NoSuchElementException;
 
+
 import misc.BaseTest;
 import misc.exceptions.EmptyContainerException;
 import datastructures.concrete.ArrayHeap;
+import datastructures.concrete.DoubleLinkedList;
+import datastructures.interfaces.IList;
 //import datastructures.concrete.ChainedHashSet;
 import datastructures.interfaces.IPriorityQueue;
 //import datastructures.interfaces.ISet;
@@ -217,6 +220,21 @@ public class TestArrayHeapFunctionality extends BaseTest {
         for (int i = 1; i < str.length; i++) {
             assertTrue(heap.peekMin().compareTo(prev) > 0);
             prev = heap.removeMin();
+        } 
+    }
+    
+    //testing the extra constructor using Floyd's build heap algorithm
+    @Test(timeout=SECOND)
+    public void testFloydBbuild() {
+        IPriorityQueue<Integer> heap = this.makeInstance();
+        IList<Integer> list = new DoubleLinkedList<Integer>();
+        for (int i = 100; i >= 0; i--) {
+            heap.insert(i);
+            list.add(i);
+        }
+        IPriorityQueue<Integer> buildHeap = new ArrayHeap<Integer>(list);
+        for (int i = 0; i <= 100; i++) {
+            assertEquals(heap.removeMin(), buildHeap.removeMin());
         } 
     }
 }
