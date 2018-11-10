@@ -6,6 +6,7 @@ import datastructures.interfaces.IList;
 import misc.Searcher;
 
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.util.Arrays;
 
@@ -228,14 +229,14 @@ public class TestTopKSortFunctionality extends BaseTest {
     public void testThrowException() {
         IList<Integer> list = new DoubleLinkedList<>();
         try {
-            IList<Integer> top = Searcher.topKSort(-1, list);
+            Searcher.topKSort(-1, list);
             fail("Expected IllegalArgumentException");
         } catch (IllegalArgumentException ex) {
             // Do nothing: this is ok
         }
         list.add(1);
         try {
-            IList<Integer> bottom = Searcher.topKSort(-1, list);
+            Searcher.topKSort(-1, list);
             fail("Expected IllegalArgumentException");
         } catch (IllegalArgumentException ex) {
             // Do nothing: this is ok

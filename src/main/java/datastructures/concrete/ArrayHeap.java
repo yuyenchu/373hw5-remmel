@@ -1,5 +1,6 @@
 package datastructures.concrete;
 
+import datastructures.interfaces.IList;
 import datastructures.interfaces.IPriorityQueue;
 import misc.exceptions.EmptyContainerException;
 
@@ -21,6 +22,20 @@ public class ArrayHeap<T extends Comparable<T>> implements IPriorityQueue<T> {
     public ArrayHeap() {
         heap = makeArrayOfT(10);
         size = 0;
+    }
+    
+    public ArrayHeap(IList<T> input) {
+        heap = makeArrayOfT(input.size());
+        size = 0;
+        for (T item: input) {
+            if (item != null) {
+                heap[size] = item;
+                size++;
+            }
+        }
+        for (int i = size - 1; i >= 0; i--) {
+            moveDown(i);
+        }
     }
 
     /**
