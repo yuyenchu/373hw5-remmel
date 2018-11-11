@@ -53,6 +53,14 @@ Heap-topKSort:
   tags:
     - part1
 
+Testing-Tests:
+  stage: part1
+  script:
+    - wget -q https://courses.cs.washington.edu/courses/cse373/18au/files/hw_scripts/hw5-part1-testing-tests.sh
+    - sh hw5-part1-testing-tests.sh
+  tags:
+    - part1
+
 
 StyleCheck-Part2:
   stage: part2
