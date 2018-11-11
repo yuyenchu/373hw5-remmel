@@ -222,19 +222,4 @@ public class TestArrayHeapFunctionality extends BaseTest {
             prev = heap.removeMin();
         } 
     }
-    
-    //testing the extra constructor using Floyd's build heap algorithm
-    @Test(timeout=SECOND)
-    public void testFloydBbuild() {
-        IPriorityQueue<Integer> heap = this.makeInstance();
-        IList<Integer> list = new DoubleLinkedList<Integer>();
-        for (int i = 100; i >= 0; i--) {
-            heap.insert(i);
-            list.add(i);
-        }
-        IPriorityQueue<Integer> buildHeap = new ArrayHeap<Integer>(list);
-        for (int i = 0; i <= 100; i++) {
-            assertEquals(heap.removeMin(), buildHeap.removeMin());
-        } 
-    }
 }
