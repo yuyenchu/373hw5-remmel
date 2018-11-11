@@ -11,11 +11,7 @@ import java.util.Arrays;
 import misc.BaseTest;
 import misc.exceptions.EmptyContainerException;
 import datastructures.concrete.ArrayHeap;
-import datastructures.concrete.DoubleLinkedList;
-import datastructures.interfaces.IList;
-//import datastructures.concrete.ChainedHashSet;
 import datastructures.interfaces.IPriorityQueue;
-//import datastructures.interfaces.ISet;
 
 import org.junit.Test;
 
